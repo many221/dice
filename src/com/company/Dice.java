@@ -36,6 +36,6 @@ Testing if rolls are random
             System.out.println ("after roll: "+getValue () + "\n--------------");
         }
 */
-}
+
 
 }
