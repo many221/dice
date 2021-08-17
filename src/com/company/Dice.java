@@ -2,8 +2,9 @@ package com.company;
 
 public class Dice {
 
-    //TODO Create a single dice --[x]
-
+    //TODO Create a single 6 prob dice --[x]
+    // TODO create a single modifiable dice(current is perfect but could be better such as a 12 or 8 sided dice) --[]
+    //Can do this by making it a non static object
     private static byte value;
 
     public static  void setValue(){
