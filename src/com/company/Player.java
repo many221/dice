@@ -44,4 +44,10 @@ public class Player {
         }
     }
 
+    public void removeDice(){
+        //for now it will only remove 1 dice
+        byte loss = 1;
+        die -= loss;
+    }
+
 }
