@@ -18,31 +18,33 @@ public class Main {
 //        //This order does not
 //        player1.rollDice ();
 //        player2.rollDice ();
-//        System.out.println (player1.getName () + " --- " + player1.getDie () + " --- " + Arrays.toString ( player1.getHand () ) );
-//        System.out.println (player2.getName () + " --- " + player2.getDie () + " --- " + Arrays.toString ( player2.getHand () ) );
+//        System.out.println (player1.getName () + " --- " + player1.getIntialDie () + " --- " + Arrays.toString ( player1.getHand () ) );
+//        System.out.println (player2.getName () + " --- " + player2.getIntialDie () + " --- " + Arrays.toString ( player2.getHand () ) );
 //        player1.rollDice ();
 //        //As seen here so figure out how to keep it and not reset it
 //        System.out.println (player1.getName () + " --- " + Arrays.toString ( player1.getHand () ) );
 
-        player1.rollDice ();//sets the dice in players hand
-        player2.rollDice ();
-        System.out.println (player1.getName () + " --- " + player1.getDie () + " --- " + player1.getHand () );
-        player1.removeDice ();
+//        player1.rollDice ();//sets the dice in players hand
+//        player2.rollDice ();
+//        System.out.println (player1.getName () + " --- " + player1.getIntialDie () + " --- " + player1.getHand () );
+//        player1.removeDice ();
 //        player1.removeDice ();
 //        player1.removeDice ();
 //        player1.removeDice (); IT WORKS YEEEEEEAAAAHHHH
 //        player1.removeDice ();
-        System.out.println (player2.getName () + " --- " + player2.getDie () + " --- " + player2.getHand () );
-        System.out.println (player1.getName () + " --- " + player1.getDie () + " --- " + player1.getHand ());
-        System.out.println (player1.getName () + " --- " + player1.getDie () + " --- " + player1.getHand ());
+
+//        System.out.println (player2.getName () + " --- " + player2.getIntialDie () + " --- " + player2.getHand () );
+//        System.out.println (player1.getName () + " --- " + player1.getIntialDie () + " --- " + player1.getHand ());
+//        System.out.println (player1.getName () + " --- " + player1.getIntialDie () + " --- " + player1.getHand ());
 
 //        for (int i = 0; i < 3; i++) {
 //            player2.rollDice ();
-//            System.out.println ( "--------------------\n"+player2.getName () + " --- " + player2.getDie () + " --- " + Arrays.toString ( player2.getHand () ) + "\n--------------------" );
+//            System.out.println ( "--------------------\n"+player2.getName () + " --- " + player2.getIntialDie () + " --- " + Arrays.toString ( player2.getHand () ) + "\n--------------------" );
 //        }
 
 
         LiarDie game = new LiarDie ();
-        System.out.println (game.getPlayers ());
+        game.Start ();
+
     }
 }

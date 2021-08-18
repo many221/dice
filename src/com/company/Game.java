@@ -3,40 +3,52 @@ package com.company;
 import java.util.ArrayList;
 
 //When think of table class think of it as table rules
-public class Game {
+public abstract class Game {
 
     //Set Structure for all games
 
     private String name;
     private String rules;
-    private byte players;
+    private int playerCount;
+    private int intialDie;
     private byte rounds;
-    private ArrayList<Player> playOrder = new ArrayList ();
+    private ArrayList<Player> playerList = new ArrayList ();
     private boolean gameCheck;
     private ArrayList<Byte> scoreBoard = new ArrayList<> ();
 
-    public void setName(String name) {
+    public Game(String name, String rules, int die) {
         this.name = name;
+        this.rules = rules;
+
+        this.intialDie = die;
     }
+
+
 
     public String getName() {
         return name;
     }
 
-    public void setRules(String rules) {
-        this.rules = rules;
+
+    public int getIntialDie() {
+        return intialDie;
     }
+
 
     public String getRules() {
         return rules;
     }
 
-    public void setPlayers(byte players) {
-        this.players = players;
+    public void setPlayerCount(int playerCount) {
+        this.playerCount = playerCount;
     }
 
-    public byte getPlayers() {
-        return players;
+    public int getPlayerCount() {
+        return playerCount;
+    }
+
+    public ArrayList<Player> getPlayerList() {
+        return playerList;
     }
 
     public void setRounds(byte rounds) {
@@ -61,13 +73,13 @@ public class Game {
 
     public void addPlayer(Player player){
 
-        playOrder.add ( player );
+        playerList.add ( player );
 
     }
 
     public void removePlayer(Player player){
 
-        playOrder.remove ( playOrder.indexOf ( player ) );
+        playerList.remove ( playerList.indexOf ( player ) );
     }
 
     public void Start(){
