@@ -11,7 +11,7 @@ public class Game {
     private String rules;
     private byte players;
     private byte rounds;
-
+    private ArrayList<Player> playOrder = new ArrayList ();
     private boolean gameCheck;
     private ArrayList<Byte> scoreBoard = new ArrayList<> ();
 
@@ -57,6 +57,17 @@ public class Game {
 
     public boolean isGameCheck() {
         return gameCheck;
+    }
+
+    public void addPlayer(Player player){
+
+        playOrder.add ( player );
+
+    }
+
+    public void removePlayer(Player player){
+
+        playOrder.remove ( playOrder.indexOf ( player ) );
     }
 
     public void Start(){

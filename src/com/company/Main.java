@@ -42,5 +42,7 @@ public class Main {
 //        }
 
 
+        LiarDie game = new LiarDie ();
+        System.out.println (game.getPlayers ());
     }
 }
