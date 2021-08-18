@@ -40,5 +40,7 @@ public class Main {
 //            player2.rollDice ();
 //            System.out.println ( "--------------------\n"+player2.getName () + " --- " + player2.getDie () + " --- " + Arrays.toString ( player2.getHand () ) + "\n--------------------" );
 //        }
+
+
     }
 }
