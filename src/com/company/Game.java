@@ -11,7 +11,7 @@ public abstract class Game {
     private String rules;
     private int playerCount;
     private int intialDie;
-    private byte rounds;
+    private int rounds;
     private ArrayList<Player> playerList = new ArrayList ();
     private boolean gameCheck;
     private ArrayList<Byte> scoreBoard = new ArrayList<> ();
@@ -23,7 +23,9 @@ public abstract class Game {
         this.intialDie = die;
     }
 
-
+    public void setGameCheck(boolean gameCheck) {
+        this.gameCheck = gameCheck;
+    }
 
     public String getName() {
         return name;
@@ -51,11 +53,11 @@ public abstract class Game {
         return playerList;
     }
 
-    public void setRounds(byte rounds) {
+    public void setRounds(int rounds) {
         this.rounds = rounds;
     }
 
-    public byte getRounds() {
+    public int getRounds() {
         return rounds;
     }
 

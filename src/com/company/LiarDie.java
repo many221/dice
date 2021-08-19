@@ -30,35 +30,35 @@ public class LiarDie extends Game {
 
         //raison dêtre=> Welcome Message & Sets Player Count
         out.printf ( "You've Have Chosen To Play %s ARRRRRGH!!!\nHow many will be playing today?\nPlaying: ", getName () );
-        setPlayerCount ( UI.num ());//Setting total players
-        out.println ("Please Enter Player(s) Name");
+        setPlayerCount ( UI.num () );//Setting total players
+        out.println ( "Please Enter Player(s) Name" );
 
         //raison dêtre=> Creates Playerrs and adds them to the list
         for (int i = 0; i < getPlayerCount (); i++) {
 
-            out.print ("Player " + (i+1) + " Name: ");
+            out.print ( "Player " + ( i + 1 ) + " Name: " );
             String n = UI.str ();
-            Player player = new Player (n, getIntialDie ());
+            Player player = new Player ( n, getIntialDie () );
             addPlayer ( player );
         }
 
         /////////////////////////////////////////////////////////////////////////////
         //X Spacing
         for (int j = 0; j < 10; j++) {
-            out.println ("\n<|::||::||::||::||::||::||::||::||::|>\n");
+            out.println ( "\n<|::||::||::||::||::||::||::||::||::|>\n" );
         }
         /////////////////////////////////////////////////////////////////////////////
 
         //X=== === === === || === === === ===X
         //raison dêtre=> Local Class to use methods within function
-        class Table{
+        class Table {
 
 
-            private ArrayList<int[]>allBets = new ArrayList<int[]> ();
+            private ArrayList<int[]> allBets = new ArrayList<int[]> ();
 
-            public void placeBets(int v, int q){
+            public void placeBets(int v, int q) {
 
-                int[] bets = {v,q};
+                int[] bets = {v, q};
                 allBets.add ( bets );
             }
 
@@ -68,16 +68,16 @@ public class LiarDie extends Game {
             private ArrayList<Integer> threes = new ArrayList<Integer> ();
             private ArrayList<Integer> fours = new ArrayList<Integer> ();
             private ArrayList<Integer> fives = new ArrayList<Integer> ();
-            private ArrayList<Integer> sixes= new ArrayList<Integer> ();
+            private ArrayList<Integer> sixes = new ArrayList<Integer> ();
 
-            public ArrayList<ArrayList<Integer>> getAllDie(){
+            public ArrayList<ArrayList<Integer>> getAllDie() {
 
-                ArrayList<ArrayList<Integer>>  allDie = new ArrayList<ArrayList<Integer>> ();
+                ArrayList<ArrayList<Integer>> allDie = new ArrayList<ArrayList<Integer>> ();
                 allDie.add ( ones );
                 allDie.add ( twos );
                 allDie.add ( threes );
-                allDie.add ( fours);
-                allDie.add ( fives);
+                allDie.add ( fours );
+                allDie.add ( fives );
                 allDie.add ( sixes );
 
                 return allDie;
@@ -85,7 +85,7 @@ public class LiarDie extends Game {
 
             private int diceInGame;
 
-            public void sortDice(ArrayList<Integer> hand){
+            public void sortDice(ArrayList<Integer> hand) {
 
                 diceInGame += hand.size ();
 
@@ -93,19 +93,31 @@ public class LiarDie extends Game {
 
                     int val = hand.get ( i );
 
-                    switch (val){
-                        case 1 ->{ones.add ( val );}
-                        case 2 ->{twos.add ( val );}
-                        case 3 ->{threes.add ( val );}
-                        case 4 ->{fours.add ( val );}
-                        case 5 ->{fives.add ( val );}
-                        case 6 ->{sixes.add ( val );}
+                    switch (val) {
+                        case 1 -> {
+                            ones.add ( val );
+                        }
+                        case 2 -> {
+                            twos.add ( val );
+                        }
+                        case 3 -> {
+                            threes.add ( val );
+                        }
+                        case 4 -> {
+                            fours.add ( val );
+                        }
+                        case 5 -> {
+                            fives.add ( val );
+                        }
+                        case 6 -> {
+                            sixes.add ( val );
+                        }
                     }
 
                 }
             }
 
-            public void roll(){
+            public void roll() {
                 for (int i = 0; i < getPlayerCount (); i++) {
                     Player player = getPlayerList ().get ( i );
                     player.rollDice ();
@@ -118,145 +130,180 @@ public class LiarDie extends Game {
         }
         Table table = new Table ();
         //X=== === === === || === === === ===X
-
-        //TODO: Turn/Round system ===[]
-
-        //TODO: Data mod/creation loops ===[]
-
-        //TODO store any variables to be monitored from rounds here
-
-        int roundCount = 1;
-
-        boolean roundCheck;
-
-
-        //TODO start rounds and turns after this point
-
-        //raison dêtre => Player turn & Round Phase 1 TESTING
-
-        out.println ("\n Round " + roundCount  + " Starting Now!!!\n");
-
         //O------------------------------------------------------------------Rolling
         table.roll ();
         //O------------------------------------------------------------------Rolling
+        //TODO--------------------------------------------------Rounds
+        int roundCount = 1;
+        int lastBetV = 0;
+        int lasBetQ = 0;
 
-        //X------------------------------------------------------------------Betting
-        int betV = 0;
-        int betQ = 0;
-        //X------------------------------------------------------------------Betting
+        getPlayerList ().trimToSize ();
 
-        for (int i = 0; i < getPlayerCount (); i++) {
-            //I------------------------------------------------------------------Lying
-            boolean cantLie = betV <=0 && betQ <= 0;
-            //I------------------------------------------------------------------Lying
+        setGameCheck ( true );
 
-            Player player = getPlayerList ().get ( i );
-            out.println (player.getName () + "'s Turn!\n");
+        if (getPlayerList ().size () == 1) {
 
-            //O------------------------------------------------------------------Rolling
-            out.println ("You have rolled " + player.getHand () + "\n");
-            //O------------------------------------------------------------------Rolling
-            //I------------------------------------------------------------------Lying
-            if (!cantLie){
+            setGameCheck ( false );
+        }
+        //TODO--------------------------------------------------Rounds
 
-                out.print ("Is the Last Player Lying?\nY|N: ");
-                String yn = UI.str ();
+        while (isGameCheck ()) {
 
-                switch (yn){
 
-                    case  "Y","y","Yes","yes" -> {
+            ArrayList<String> plank = new ArrayList<String> ();
 
-                   int index = betV - 1;
+            for (int i = 0; i < getPlayerList ().size (); i++) {
+                if (getPlayerList ().get ( i ).getHand ().isEmpty ()) {
+                    plank.add ( getPlayerList ().get ( i ).getName () );
+                    getPlayerList ().remove ( i );
+                }
+            }
 
-                   ArrayList<Integer> betArr = table.getAllDie ().get ( index );
+            //raison dêtre => Player turn & Round Phase 1 TESTING
 
-                   boolean betCheck = betArr.size () <= betQ;
+            out.println ( "\n Round " + roundCount + " Starting Now!!!\n" );
 
-                   if (betCheck){
+            //X------------------------------------------------------------------Betting
+            int betV = lastBetV;
+            int betQ = lasBetQ;
 
-                       out.println ("They're Lying!");
+            lastBetV = betV;
+            lasBetQ = betQ;
 
-                      if (i == (getPlayerCount ()-1)){
+            //X------------------------------------------------------------------Betting
 
-                          getPlayerList ().get ( 0 ).removeDice ();
+            for (int i = 0; i < getPlayerCount (); i++) {
+                //I------------------------------------------------------------------Lying
+                boolean cantLie = betV <= 0 && betQ <= 0;
+                //I------------------------------------------------------------------Lying
 
-                      } else  getPlayerList ().get ((i-1)).removeDice ();
+                Player player = getPlayerList ().get ( i );
 
-                   }else if(!betCheck) {
-                       out.println ("They're Truthing! You've Lost A Die"); player.removeDice ();
-                   }
+                out.println ( player.getName () + "'s Turn!\n" );
+
+                //O------------------------------------------------------------------Rolling
+                out.println ( "You have rolled " + player.getHand () + "\n" );
+                //O------------------------------------------------------------------Rolling
+                //I------------------------------------------------------------------Lying
+                if (!cantLie) {
+
+                    out.print ( "Is the Last Player Lying?\nY|N: " );
+                    String yn = UI.str ();
+
+                    switch (yn) {
+
+                        case "Y", "y", "Yes", "yes" -> {
+
+                            int index = betV - 1;
+
+                            ArrayList<Integer> betArr = table.getAllDie ().get ( index );
+
+                            boolean betCheck = betArr.size () <= betQ;
+
+                            if (betCheck) {
+
+                                out.println ( "They're Lying!" );
+
+                                if (i == ( getPlayerCount () - 1 )) {
+
+                                    getPlayerList ().get ( 0 ).removeDice ();
+
+                                } else getPlayerList ().get ( ( i - 1 ) ).removeDice ();
+
+                            } else if (!betCheck) {
+                                out.println ( "They're Truthing! You've Lost A Die" );
+                                player.removeDice ();
+                            }
+
+                        }
+                        case "N", "n", "No", "no" -> out.println ( "You Said No" );
 
                     }
-                    case "N","n","No","no" -> out.println ("You Said No");
 
                 }
+                //I------------------------------------------------------------------Lying
 
-            }
-            //I------------------------------------------------------------------Lying
-
-            //X------------------------------------------------------------------Betting
-            boolean betCheck = true;
+                //X------------------------------------------------------------------Betting
+                boolean betCheck = true;
 
 
-            while (betCheck) {
+                while (betCheck) {
 
-                out.print ( "\nPlease Bet On The Value Of The Die\nBet: " );
-                int playerBetV = UI.num ();
-                out.print ( "Please Bet On The Quantity Of The Die\nBet: " );
-                int playerBetQ = UI.num ();
+                    out.print ( "\nPlease Bet On The Value Of The Die\nBet: " );
+                    int playerBetV = UI.num ();
+                    out.print ( "Please Bet On The Quantity Of The Die\nBet: " );
+                    int playerBetQ = UI.num ();
 
-                int r1die = getPlayerCount () * getIntialDie ();
+                    int r1die = getPlayerCount () * getIntialDie ();
 
-                boolean round1 = playerBetV >= betV && playerBetQ <= r1die || playerBetQ > betQ && playerBetQ <= r1die;
-                boolean roud2UP = playerBetV >= betV && playerBetQ <= table.diceInGame || playerBetQ > betQ && playerBetQ <= table.diceInGame;
-                if (round1 && roundCount == 1) {
-                    betCheck = false;
-                    betV = playerBetV;
-                    betQ = playerBetQ;
-                    table.placeBets ( playerBetV, playerBetQ );
-                } else if (roud2UP) {
-                    betCheck = false;
-                    betV = playerBetV;
-                    betQ = playerBetQ;
-                    table.placeBets ( playerBetV, playerBetQ );
-                } else if (roundCount == 1) {
-                    out.println ( "\n(<|:::!!INVAlID ENTRIES!!:::|>) \nPlease Enter Value >= " + betV + " & A Quantity > " + betQ + "\nOr A Quantity <= " + r1die );
-                } else {
-                    out.println ( "\n(<|:::!!INVAlID ENTRIES!!:::|>) \nPlease Enter Value >= " + betV + " & A Quantity > " + betQ + "\nOr A Quantity <= " + table.diceInGame );
+                    boolean round1 = playerBetV >= betV && playerBetQ <= r1die || playerBetQ > betQ && playerBetQ <= r1die;
+                    boolean roud2UP = playerBetV >= betV && playerBetQ <= table.diceInGame || playerBetQ > betQ && playerBetQ <= table.diceInGame;
+                    if (round1 && roundCount == 1) {
+                        betCheck = false;
+                        betV = playerBetV;
+                        betQ = playerBetQ;
+                        table.placeBets ( playerBetV, playerBetQ );
+                    } else if (roud2UP) {
+                        betCheck = false;
+                        betV = playerBetV;
+                        betQ = playerBetQ;
+                        table.placeBets ( playerBetV, playerBetQ );
+                    } else if (roundCount == 1) {
+                        out.println ( "\n(<|:::!!INVAlID ENTRIES!!:::|>) \nPlease Enter Value >= " + betV + " & A Quantity > " + betQ + "\nOr A Quantity <= " + r1die );
+                    } else {
+                        out.println ( "\n(<|:::!!INVAlID ENTRIES!!:::|>) \nPlease Enter Value >= " + betV + " & A Quantity > " + betQ + "\nOr A Quantity <= " + table.diceInGame );
+                    }
                 }
-            }
-            //X------------------------------------------------------------------Betting
-            /////////////////////////////////////////////////////////////////////////////
-            //X Spacing
-            for (int j = 0; j < 10; j++) {
-                out.println ("\n<|::||::||::||::||::||::||::||::||::|>\n");
-            }
-            /////////////////////////////////////////////////////////////////////////////
-            out.println ( player.getName () +" Bet The Value " + betV + " Is Present " + betQ  + " Times \n");
+                //X------------------------------------------------------------------Betting
+                /////////////////////////////////////////////////////////////////////////////
+                //X Spacing
+                for (int j = 0; j < 10; j++) {
+                    out.println ( "\n<|::||::||::||::||::||::||::||::||::|>\n" );
+                }
+                /////////////////////////////////////////////////////////////////////////////
+                out.println ( player.getName () + " Bet The Value " + betV + " Is Present " + betQ + " Times \n" );
 
             }
 
-        //raison dêtre => Tells how many die are on the table
-        int diceLeft = 0;
-        String summary = "";
+            //raison dêtre => Tells how many die are on the table
+            int diceLeft = 0;
 
-        for (int i = 0; i < getPlayerList ().size (); i++) {
-            diceLeft += getPlayerList ().get ( i ).getHand ().size ();
-            summary += getPlayerList () .get ( i ).getName ()+" has in hand "+getPlayerList ().get ( i ).getHand () + ".\n";
+            String summary = "";
+
+            for (int i = 0; i < getPlayerList ().size (); i++) {
+                diceLeft += getPlayerList ().get ( i ).getHand ().size ();
+                summary += getPlayerList ().get ( i ).getName () + " has in hand " + getPlayerList ().get ( i ).getHand () + ".\n";
+            }
+
+            out.println ( "There are " + diceLeft + " dice on the table\n" + summary + "\nPlayers Who Have Walked The Plank " + plank );
+
+            //TOdo================== new round stuff
+
+
+        for (int j = 0; j < 2; j++) {
+            out.println ("\n<|::||::||::||::||::||::||::||::||::|>\n");
         }
 
-        out.println ("There are " + diceLeft  + " dice on the table\n" + summary );
-        //TOdo================== new round stuff
-       /////////////////////////////////////////////////////////////////////////////
-
-//        for (int j = 0; j < 10; j++) {
-//            out.println ("\n<|::||::||::||::||::||::||::||::||::|>\n");
-//        }
-       /////////////////////////////////////////////////////////////////////////////
-//        roundCount++;
-//        out.println ("\n Round " + roundCount + " Starting Now!!!\n");
+        roundCount++;
+        out.println ("\n Round " + roundCount + " Starting Now!!!\n");
 
         }
+        out.println ( "Congratulation " + getPlayerList ().get ( 0 ).getName () + "You Have Won\n" );
+        out.print ( "Would you Like to Play Again?\nY|N: " );
+        String yn = UI.str ();
 
+        switch (yn) {
+
+            case "Y", "y", "Yes", "yes" ->Start ();
+            case "N", "n", "No", "no" ->{
+                out.println ("Thank You For Playing Come Back Soon");
+            }
+        }
     }
+}
+//FIXME 1) Refresh dice and dice size per roll --[]
+//FIXME 2) Link link last player bet to first player lie action --[]
+//FIXME 3) Find Why sometimes proper bet comes back as lie
+//FIXME 4) Fix endgame situation
 
