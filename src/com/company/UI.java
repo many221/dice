@@ -9,6 +9,8 @@ public class UI {
     public static Integer num(){
         return in.nextInt ();
     }
+
+
     public static String strL (){
         return in.nextLine ();
     }
