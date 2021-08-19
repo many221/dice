@@ -138,69 +138,106 @@ public class LiarDie extends Game {
 
         //TODO store any variables to be monitored from rounds here
 
-        int roundCount;
+        int roundCount = 1;
 
         boolean roundCheck;
 
 
         //TODO start rounds and turns after this point
 
-        //NOTE The order of the index is the play order
+        //The order of the index is the play order
 
 
         //raison dêtre => Player turn & Round Phase 1 TESTING
+
+        out.println ("\n Round " + roundCount  + " Starting Now!!!\n");
+
         //X------------------------------------------------------------------Betting
         int betV = 0;
         int betQ = 0;
+
         //X------------------------------------------------------------------Betting
+        //I------------------------------------------------------------------Lying
+
+        String lastPlayerName;
+        int lieCount = 0;
+        //I------------------------------------------------------------------Lying
+
+
         for (int i = 0; i < getPlayerCount (); i++) {
-            //O------------------------------------------------------------------Rolling
+            //I------------------------------------------------------------------Lying
+            boolean cantLie = betV <=0 && betQ <= 0;
+            //I------------------------------------------------------------------Lying
+
+
             Player player = getPlayerList ().get ( i );
             out.println (player.getName () + "'s Turn!\n");
+
+            //I------------------------------------------------------------------Lying
+            if (!cantLie){
+
+
+            }
+            //I------------------------------------------------------------------Lying
+            //O------------------------------------------------------------------Rolling
             player.rollDice ();
             table.sortDice ( player.getHand () );
             out.println ("You have rolled " + player.getHand ());
             //O------------------------------------------------------------------Rolling
     //X------------------------------------------------------------------Betting
             boolean betCheck = true;
-
+            //X------------------------------------------------------------------Betting
             while (betCheck) {
 
-               out.print ( "Please Bet On The Value Of The Die\nBet: " );
-               int playerBetV = UI.num ();
-               out.print ( "Please Bet On The Quantity Of The Die\nBet: " );
-               int playerBetQ = UI.num ();
-               if (playerBetV >= betV && playerBetQ <= table.diceInGame || playerBetQ > betQ && playerBetQ <= table.diceInGame) {
-                   betCheck = false;
-                   betV = playerBetV;
-                   betQ = playerBetQ;
-                   table.placeBets ( playerBetV, playerBetQ );
-               }  else out.println ("\n(<|:::!!INVAlID ENTRIES!!:::|>) \nPlease Enter Value >= " + betV + " & A Quantity > " + betQ + "\nOr A Quantity <= " + table.diceInGame);
+                out.print ( "Please Bet On The Value Of The Die\nBet: " );
+                int playerBetV = UI.num ();
+                out.print ( "Please Bet On The Quantity Of The Die\nBet: " );
+                int playerBetQ = UI.num ();
+
+                int r1die = getPlayerCount () * getIntialDie ();
+
+                boolean round1 = playerBetV >= betV && playerBetQ <= r1die || playerBetQ > betQ && playerBetQ <= r1die;
+                boolean roud2UP = playerBetV >= betV && playerBetQ <= table.diceInGame || playerBetQ > betQ && playerBetQ <= table.diceInGame;
+                if (round1 && roundCount == 1) {
+                    betCheck = false;
+                    betV = playerBetV;
+                    betQ = playerBetQ;
+                    table.placeBets ( playerBetV, playerBetQ );
+                } else if (roud2UP) {
+                    betCheck = false;
+                    betV = playerBetV;
+                    betQ = playerBetQ;
+                    table.placeBets ( playerBetV, playerBetQ );
+                } else if (roundCount == 1) {
+                    out.println ( "\n(<|:::!!INVAlID ENTRIES!!:::|>) \nPlease Enter Value >= " + betV + " & A Quantity > " + betQ + "\nOr A Quantity <= " + r1die );
+                } else {
+                    out.println ( "\n(<|:::!!INVAlID ENTRIES!!:::|>) \nPlease Enter Value >= " + betV + " & A Quantity > " + betQ + "\nOr A Quantity <= " + table.diceInGame );
+                }
             }
-/////////////////////////////////////////////////////////////////////////////
+
+            /////////////////////////////////////////////////////////////////////////////
             //X Spacing
             for (int j = 0; j < 10; j++) {
                 out.println ("\n<|::||::||::||::||::||::||::||::||::|>\n");
             }
-/////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////
 
-            out.println ( player.getName () +" Has Bet The Value " + betV + " Is Present " + betQ  + " Times \n");
+            }
 
+        //raison dêtre => Tells how many die are on the table
+        out.println ("There are " + table.diceInGame +" dice on the table" +"\nThe bets on the table are " + Arrays.deepToString ( table.allBets.toArray () ) );
 
-    //X------------------------------------------------------------------Betting
-
-        }
-
+        //TOdo================== new round stuff
         /////////////////////////////////////////////////////////////////////////////
         //X Spacing
         for (int j = 0; j < 10; j++) {
             out.println ("\n<|::||::||::||::||::||::||::||::||::|>\n");
         }
         /////////////////////////////////////////////////////////////////////////////
+        roundCount++;
+        out.println ("\n Round " + roundCount + " Starting Now!!!\n");
 
-
-        //raison dêtre => Tells how many die are on the table
-        out.println ("There are " + table.diceInGame +" dice on the table" +"\nThe bets on the table are " + Arrays.deepToString ( table.allBets.toArray () ) );
+        }
 
     }
-}
+
