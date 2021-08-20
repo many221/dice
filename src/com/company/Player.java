@@ -50,7 +50,10 @@ public class Player {
     }
 
     public void rollDice(){
-
+        //O----------------Clear Previous Roll
+        if (!hand.isEmpty ()){
+         hand.clear ();
+        }
         for (int i = 0; i < playerDie; i++) {
 
             getHand ().add ( (int) Dice.roll () );
