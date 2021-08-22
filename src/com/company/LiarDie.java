@@ -29,9 +29,13 @@ public class LiarDie extends Game {
         super.Start ();
 
         //raison dêtre=> Welcome Message & Sets Player Count
-        out.printf ( "You've Have Chosen To Play %s ARRRRRGH!!!\nHow many will be playing today?\nPlaying: ", getName () );
+        out.printf ( "You've Have Chosen To Play %s ARRRRRGH!!!\nHow many will be playing today? Game will only start if more than 2 players join\nPlaying: ", getName () );
         setPlayerCount ( UI.num () );//Setting total players
         out.println ( "Please Enter Player(s) Name" );
+
+//        if (getPlayerCount () < 2) {
+//            Start ();
+//        }
 
         //raison dêtre=> Creates Playerrs and adds them to the list
         for (int i = 0; i < getPlayerCount (); i++) {
@@ -48,6 +52,9 @@ public class LiarDie extends Game {
             out.println ( "\n<|::||::||::||::||::||::||::||::||::|>\n" );
         }
         /////////////////////////////////////////////////////////////////////////////
+
+        //raison dêtre => Player removal
+        ArrayList<String> plank = new ArrayList<String> ();
 
         //X=== === === === || === === === ===X
         //raison dêtre=> Local Class to use methods within function
@@ -89,6 +96,7 @@ public class LiarDie extends Game {
 
                 diceInGame += hand.size ();
 
+
                 for (int i = 0; i < hand.size (); i++) {
 
                     int val = hand.get ( i );
@@ -119,12 +127,25 @@ public class LiarDie extends Game {
             }
 
             public void roll() {
+
+
                 for (int i = 0; i < getPlayerCount (); i++) {
                     Player player = getPlayerList ().get ( i );
                     player.rollDice ();
                     sortDice ( player.getHand () );
                 }
 
+            }
+
+            public void clearRoll() {
+
+                ones.clear ();
+                twos.clear ();
+                threes.clear ();
+                fours.clear ();
+                fives.clear ();
+                sixes.clear ();
+                diceInGame = 0;
             }
 
 
@@ -137,11 +158,11 @@ public class LiarDie extends Game {
         //TODO--------------------------------------------------Rounds
         int roundCount = 1;
 
-        int lastBetV = 0;
-        int lasBetQ = 0;
+        int betV = 0;
+        int betQ = 0;
         getPlayerList ().trimToSize ();
 
-        out.println ( "\n Round " + roundCount + " Starting Now!!!\n" );
+        out.println ( "\n(1) Round " + roundCount + " Starting Now!!!\n" );
 
         setGameCheck ( true );
 
@@ -154,37 +175,26 @@ public class LiarDie extends Game {
         while (isGameCheck ()) {
 
 
-            //raison dêtre => Player removal
-            ArrayList<String> plank = new ArrayList<String> ();
-
             for (int i = 0; i < getPlayerList ().size (); i++) {
+
                 Player player = getPlayerList ().get ( i );
-                if (player.getHand ().isEmpty ()) {
-                    plank.add ( player.getName () );
-                    removePlayer ( player );
-                }
-            }
+//                if (player.getHand ().isEmpty ()) {
+//                    plank.add ( player.getName () );
+//                    removePlayer ( player );
+//                }
 
             //X------------------------------------------------------------------TBetting
-            int betV = 0;//0
-            int betQ = 0;//0
+//            int betV = 0;//0
+//            int betQ = 0;//0
 
             //X------------------------------------------------------------------TBetting
-            boolean nochallenge = true;
 
 
-            for (int i = 0; i < getPlayerCount (); i++) {
-                //O------------------------------Re-roll dice each round
-                if (roundCount > 1) {
-                    table.roll ();
-                }
-                //O------------------------------Re-roll dice each round
-                if(nochallenge){ continue;}
                 //I------------------------------------------------------------------Lying
                 boolean cantLie = betV <= 0 && betQ <= 0;
                 //I------------------------------------------------------------------Lying
 
-                Player player = getPlayerList ().get ( i );
+
 
                 out.println ( player.getName () + "'s Turn!\n" );
 
@@ -192,12 +202,12 @@ public class LiarDie extends Game {
                 out.println ( "You have rolled " + player.getHand () );
                 //O------------------------------------------------------------------Rolling
 
-                if (cantLie) {
+                if (cantLie && roundCount <= 1) {
                     out.println ( "NO BETS CAN BE MADE" );
                 }
                 //I------------------------------------------------------------------Lying
-                if (!cantLie) {
-                    out.println ( "ROUND CHECK.\nThe last round value bet was " + betV + "\nThe last round Quantity bet was " + betQ + "\n\n" );
+                if (!cantLie || roundCount > 1) {
+                    out.println ( "The last round value bet was " + betV + "\nThe last round Quantity bet was " + betQ + "\n\n" );
                     out.print ( "Call A Bluff?\nY|N: " );
                     String yn = UI.str ();
 
@@ -205,7 +215,6 @@ public class LiarDie extends Game {
 
                         case "Y", "y", "Yes", "yes" -> {
                             //TODO: Figure out how to reset round here --[]
-                            nochallenge = false;
 
                             int index = betV - 1;
                             out.println ( "Checking Array: " + index );
@@ -233,19 +242,31 @@ public class LiarDie extends Game {
                                 player.removeDice ();
 
                             }
+                            betQ = 0;
+                            betV = 0;
+                            table.clearRoll ();
+                            table.roll ();
+                            out.println ( "All Die Have Been Rerolled\n" + "Your new hand is " + player.getHand () );
+                        }
+                        case "N", "n", "No", "no" -> {
+//                            table.clearRoll ();
+//                            table.roll ();
+                            out.println ("\nYour hand is " + player.getHand () );
 
                         }
-                        case "N", "n", "No", "no" -> out.println ( "You Said No" );
 
                     }
 
                 }
                 //I------------------------------------------------------------------Lying
+                if (player.getHand ().isEmpty ()) {
 
+                    out.println ( player.getName () + " Has Lost!!" );
+                    break;
+                }
                 //X------------------------------------------------------------------Betting
-                out.print ( "\nPlease Bet On The Value Of The Die\nBet: " );
+                out.print ( table.diceInGame + " Die left\nPlease Bet On The Value Of The Die\nBet: " );
                 int playerBetV = UI.num ();
-                UI.strL ();
                 out.print ( "Please Bet On The Quantity Of The Die\nBet: " );
                 int playerBetQ = UI.num ();
 
@@ -254,17 +275,20 @@ public class LiarDie extends Game {
                 boolean round1 = playerBetV >= betV && playerBetQ <= r1die || playerBetQ > betQ && playerBetQ <= r1die;
                 //LaterDice
                 boolean roud2UP = playerBetV >= betV && playerBetQ <= table.diceInGame || playerBetQ > betQ && playerBetQ <= table.diceInGame;
-                if (round1 && roundCount == 1) {
+                if (round1 ) {
 
                     betV = playerBetV;
                     betQ = playerBetQ;
                     table.placeBets ( playerBetV, playerBetQ );
+
                 } else if (roud2UP) {
 
                     betV = playerBetV;
                     betQ = playerBetQ;
                     table.placeBets ( playerBetV, playerBetQ );
+
                 } else if (roundCount == 1) {
+
                     out.println ( "\n(<|:::!!INVAlID ENTRIES!!:::|>) \nPlease Enter Value >= " + betV + " & A Quantity > " + betQ + "\nOr A Quantity <= " + r1die );
                 } else {
                     out.println ( "\n(<|:::!!INVAlID ENTRIES!!:::|>) \nPlease Enter Value >= " + betV + " & A Quantity > " + betQ + "\nOr A Quantity <= " + table.diceInGame );
@@ -274,6 +298,7 @@ public class LiarDie extends Game {
                 /////////////////////////////////////////////////////////////////////////////
                 //X Spacing
                 for (int j = 0; j < 10; j++) {
+
                     out.println ( "\n<|::||::||::||::||::||::||::||::||::|>\n" );
                 }
                 /////////////////////////////////////////////////////////////////////////////
@@ -293,38 +318,40 @@ public class LiarDie extends Game {
 
             out.println ( "There are " + diceLeft + " dice on the table\n" + summary + "\nPlayers Who Have Walked The Plank " + plank );
 
-        //TOdo================== new round stuff
+            //TOdo================== new round stuff
 
 
-        for (int j = 0; j < 2; j++) {
-            out.println ( "\n<|::||::||::||::||::||::||::||::||::|>\n" );
-        }
-
-        roundCount++;
-        out.println ( "\n (2) Round " + roundCount + " Starting Now!!!\n" );
-
-        }
-        out.println ( "Congratulation " + getPlayerList ().get ( 0 ).getName () + "You Have Won\n" );
-        out.print ( "Would you Like to Play Again?\nY|N: " );
-        String yn = UI.str ();
-
-        switch(yn)
-
-    {
-
-            case "Y", "y", "Yes", "yes" ->Start ();
-            case "N", "n", "No", "no" ->{
-                out.println ("Thank You For Playing Come Back Soon");
+            for (int j = 0; j < 2; j++) {
+                out.println ( "\n<|::||::||::||::||::||::||::||::||::|>\n" );
             }
+
+            if (getPlayerCount () < 2) {
+                out.println ( "Congratulation " + getPlayerList ().get ( 0 ).getName () + "You Have Won\n" );
+                out.print ( "Would you Like to Play Again?\nY|N: " );
+                String yn = UI.str ();
+
+                switch (yn) {
+
+                    case "Y", "y", "Yes", "yes" -> Start ();
+                    case "N", "n", "No", "no" -> {
+                        out.println ( "Thank You For Playing Come Back Soon" );
+                    }
+                }
+            }
+
+            roundCount++;
+            out.println ( "\n (2) Round " + roundCount + " Starting Now!!!\n" );
+
         }
+
+
     }
+
 }
 
 
 
-
-//FIXME 2) Link link last player bet to first player lie action --[]
-//FIXME 4) Fix endgame situation
-//FIXME 6) Conditon for min 2 players
+//FIXME  Fix endgame situation
+//FIXME Fix
 
 
